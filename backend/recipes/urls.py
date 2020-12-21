@@ -11,7 +11,7 @@ recipes_urls = [
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('subscriptions/', views.subscriptions, name='subscriptions'),
+    path('follows/', views.subscriptions, name='subscriptions'),
     path('favorites/', views.favorites, name='favorites'),
     path('shop-list/', views.shop_list, name='shop_list'),
     path('recipe/', include(recipes_urls)),
