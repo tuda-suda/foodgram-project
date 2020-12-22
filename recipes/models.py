@@ -20,23 +20,27 @@ class Recipe(models.Model):
         related_name='recipes',
     )
     name = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='recipes/')
-    description = models.TextField()
+    # image = models.ImageField(upload_to='recipes/')
+    # description = models.TextField()
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',
     )
-    tag = ArrayField(models.CharField(max_length=7), size=3)
-    cooking_time = models.PositiveSmallIntegerField()
+    # tag = ArrayField(models.CharField(max_length=7), size=3)
+    # cooking_time = models.PositiveSmallIntegerField()
     slug = AutoSlugField(populate_from='name', allow_unicode=True)
+    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+
+    class Meta:
+        ordering = ('-pub_date', )
 
 
 class RecipeIngredient(models.Model):
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.PROTECT)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.DO_NOTHING)
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='ingredients'
+        # related_name='ingredients'
     )
     quantity = models.PositiveSmallIntegerField()
 
