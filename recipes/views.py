@@ -5,11 +5,11 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.urls import reverse
 
-from .models import Recipe, Follow
+from .models import Recipe
 from .forms import RecipeForm
 
 
-User = get_user_model
+User = get_user_model()
 
 
 def index(request):
@@ -20,7 +20,7 @@ def index(request):
 
     return render(
         request,
-        'index.html',
+        'recipes/indexAuth.html',
         {
             'page': page,
             'paginator': paginator
@@ -31,12 +31,7 @@ def index(request):
 def recipe_view(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
 
-    if request.user.is_authenticated:
-        template_name = 'singlePage.html'
-    else:
-        template_name = 'singlePageNotAuth.html'
-
-    return render(request, template_name, {'recipe': recipe})
+    return render(request, 'recipes/singlePage.html', {'recipe': recipe})
 
 
 @login_required
@@ -48,7 +43,7 @@ def recipe_new(request):
         recipe.save()
         return redirect('recipe_view', recipe_id=recipe.id)
     
-    return render(request, 'formRecipe.html', {'form': form})
+    return render(request, 'recipes/formRecipe.html', {'form': form})
 
 
 @login_required
@@ -67,7 +62,7 @@ def recipe_edit(request, recipe_id):
         form.save()
         return redirect('recipe_view', recipe_id=recipe.id)
 
-    return render(request, 'formRecipe.html', {'form': form})
+    return render(request, 'recipes/formRecipe.html', {'form': form})
 
 
 def profile_view(request, username):
@@ -80,7 +75,7 @@ def profile_view(request, username):
 
     return render(
         request,
-        'index.html',
+        'recipes/authorRecipe.html',
         {
             'author': author,
             'page': page,

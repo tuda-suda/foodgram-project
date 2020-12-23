@@ -27,7 +27,7 @@ class Recipe(models.Model):
         Ingredient,
         through='RecipeIngredient',
     )
-    tag = ArrayField(models.CharField(max_length=7), size=3)
+    # tag = ArrayField(models.CharField(max_length=7), size=3)
     cooking_time = models.PositiveSmallIntegerField()
     slug = AutoSlugField(populate_from='name', allow_unicode=True)
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
