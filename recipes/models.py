@@ -27,9 +27,9 @@ class Recipe(models.Model):
         Ingredient,
         through='RecipeIngredient',
     )
-    # tag = ArrayField(models.CharField(max_length=7), size=3)
     cooking_time = models.PositiveSmallIntegerField()
     slug = AutoSlugField(populate_from='name', allow_unicode=True)
+    tags = models.ManyToManyField('Tag', related_name='recipes')
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
 
     class Meta:
@@ -51,3 +51,9 @@ class RecipeIngredient(models.Model):
 
     class Meta:
         unique_together = ('ingredient', 'recipe')
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50)
+    display_name = models.CharField(max_length=50)
+    color = models.CharField(max_length=50)

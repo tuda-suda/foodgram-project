@@ -1,17 +1,19 @@
+{% load thumbnail %}
 <div class="card" data-id="{{ recipe.id }}">
   {% thumbnail recipe.image '960x500' crop='center' as im %}
   <a href="{% url 'recipe_view' recipe.id %}" class="link" target="_blank"><img src="{{ im.url }}" alt="Какой-то текст"
       class="card__image"></a>
+  {% endthumbnail %}
   <div class="card__body">
     <a class="card__title link" href="{% url 'recipe_view' recipe.id %}" target="_blank">{{ recipe.name }}</a>
     <ul class="card__items">
-      <li class="card__item"><span class="badge badge_style_green">Обед</span></li>
-      <li class="card__item"><span class="badge badge_style_orange">Завтрак</span></li>
-      <li class="card__item"><span class="badge badge_style_purple">Ужин</span></li>
+      {% for tag in recipe.tags.all %}
+        <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.display_name }}</span></li>
+      {% endfor %}
     </ul>
     <div class="card__items card__items_column">
-      <p class="card__text"><span class="icon-time"></span>{{ recipe.cooking_time }}</p>
-      <p class="card__text"><span class="icon-user"></span> <a href="{% url 'profile' recipe.author.username %}" style="color: black">{{ recipe.author.get_full_name }}</a></p>
+      <p class="card__text"><span class="icon-time"></span>{{ recipe.cooking_time }} мин.</p>
+      <p class="card__text"><span class="icon-user"></span> <a href="{% url 'profile_view' recipe.author.username %}" style="color: black">{{ recipe.author.get_full_name }}</a></p>
     </div>
   </div>
   <div class="card__footer">

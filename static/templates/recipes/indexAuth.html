@@ -8,36 +8,21 @@
 {% endblock %}
 
 {% block content %}
+  <div class="main__header">
+    <h1 class="main__title">Рецепты</h1>
+    {% include '../base/includes/tags.html' %}
+  </div>
 
-<div class="main__header">
-  <h1 class="main__title">Рецепты</h1>
-  <ul class="tags">
-    <li class="tags__item">
-      <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" href="#"></a>
-      <span class="tags__label">Завтрак</span>
-    </li>
-    <li class="tags__item">
-      <a id="lunch" class="tags__checkbox tags__checkbox_style_green tags__checkbox_active" href="#"></a>
-      <span for="lunch" class="tags__label">Обед</span>
-    </li>
-    <li class="tags__item">
-      <a id="dinner" class="tags__checkbox tags__checkbox_style_purple tags__checkbox_active" href="#"></a>
-      <label for="dinner" class="tags__label">Ужин</label>
-    </li>
-  </ul>
-</div>
+  <div class="card-list">
+    {% for recipe in page %}
+      {% include './recipeCard.html' with recipe=recipe %}
+    {% endfor %}
+  </div>
 
-<div class="card-list">
-  {% load thumbnail %}
-  {% for recipe in page %}
-    {% include 'recipeCard.html' with recipe=recipe %}
-  {% endfor %}
-</div>
+  {% if page.has_other_pages %}
+    {% include '../base/includes/paginatior.html' with page=page paginator=paginator %}
+  {% endif %}
 {% endblock %}
-
-{% if page.has_other_pages %}
-  {% include '../base/includes/paginatior.html' with page=page paginator=paginator %}
-{% endif %}
 
 {% block js %}
   <script src="{% static 'js/components/MainCards.js' %}"></script>
@@ -47,5 +32,10 @@
   <script src="{% static 'js/components/CardList.js' %}"></script>
   <script src="{% static 'js/components/Header.js' %}"></script>
   <script src="{% static 'js/api/Api.js' %}"></script>
-  <script src="{% static 'templates/recipes/indexAuth.js' %}"></script>
+
+  {% if user.is_authenticated %}
+    <script src="{% static 'templates/recipes/indexAuth.js' %}"></script>
+  {% else %}
+    <script src="{% static 'templates/recipes/indexNotAuth.js' %}"></script>
+  {% endif %}
 {% endblock %}

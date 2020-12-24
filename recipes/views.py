@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.urls import reverse
 
-from .models import Recipe
+from .models import Recipe, Tag
 from .forms import RecipeForm
 
 
@@ -13,7 +13,17 @@ User = get_user_model()
 
 
 def index(request):
-    recipes = Recipe.objects.all().select_related('author')
+    tags = request.GET.getlist('tag', ['breakfast', 'lunch', 'dinner'])
+    all_tags = Tag.objects.all()
+
+    recipes = Recipe.objects.all().filter(
+        tags__name__in=tags
+    ).select_related(
+        'author'
+    ).prefetch_related(
+        'tags'
+    ).distinct()
+
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -23,7 +33,9 @@ def index(request):
         'recipes/indexAuth.html',
         {
             'page': page,
-            'paginator': paginator
+            'paginator': paginator,
+            'tags': tags,
+            'all_tags': all_tags,
         }
     )
 
