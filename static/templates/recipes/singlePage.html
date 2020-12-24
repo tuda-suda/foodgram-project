@@ -49,11 +49,6 @@
         {% for ingredient in recipe.ingredients_amount.all %}
           <p class=" single-card__section-item">{{ ingredient.ingredient.title }} - {{ ingredient.quantity }} {{ ingredient.ingredient.dimension }}</p>
         {% endfor %}
-        <!-- <p class=" single-card__section-item">Молоко - 200 мл.</p>
-        <p class=" single-card__section-item">Тосты - 4 шт.</p>
-        <p class=" single-card__section-item">Сахар 2 сл.л.</p>
-        <p class=" single-card__section-item">Яйцо - 2 шт.</p>
-        <p class=" single-card__section-item">Молоко - 200 мл.</p> -->
       </div>
     </div>
 

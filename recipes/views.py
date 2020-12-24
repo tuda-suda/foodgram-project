@@ -7,6 +7,7 @@ from django.urls import reverse
 
 from .models import Recipe, Tag
 from .forms import RecipeForm
+from .utils import save_recipe
 
 
 User = get_user_model()
@@ -41,7 +42,10 @@ def index(request):
 
 
 def recipe_view(request, recipe_id):
-    recipe = get_object_or_404(Recipe, id=recipe_id)
+    recipe = get_object_or_404(
+        Recipe.objects.select_related('author'),
+        id=recipe_id
+    )
 
     return render(request, 'recipes/singlePage.html', {'recipe': recipe})
 
@@ -50,9 +54,8 @@ def recipe_view(request, recipe_id):
 def recipe_new(request):
     form = RecipeForm(request.POST or None, files=request.FILES or None)
     if request.method == 'POST' and form.is_valid():
-        recipe = form.save(commit=False)
-        recipe.author = request.user
-        recipe.save()
+        recipe = save_recipe(request, form)
+
         return redirect('recipe_view', recipe_id=recipe.id)
     
     return render(request, 'recipes/formRecipe.html', {'form': form})
