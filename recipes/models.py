@@ -10,8 +10,8 @@ User = get_user_model()
 
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=150)
-    measure_unit = models.CharField(max_length=10)
+    title = models.CharField(max_length=150)
+    dimension = models.CharField(max_length=10)
 
 
 class Recipe(models.Model):

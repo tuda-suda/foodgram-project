@@ -9,8 +9,8 @@ class RecipeAdmin(admin.ModelAdmin):
 
 
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('name', 'measure_unit')
-    list_filter = ('name', )
+    list_display = ('title', 'dimension')
+    list_filter = ('title', )
 
 
 class TagAdmin(admin.ModelAdmin):

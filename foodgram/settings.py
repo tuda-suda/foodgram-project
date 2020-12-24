@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sorl.thumbnail',
     'qurl_templatetag',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

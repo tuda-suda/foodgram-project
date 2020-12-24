@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('about-author/', lambda x: x, name='about_author'),
     path('tech-stack/', lambda x: x, name='tech_stack'),
+    path('api/v1/', include('api.urls')),
     path('', include('recipes.urls')),
 ]
 
