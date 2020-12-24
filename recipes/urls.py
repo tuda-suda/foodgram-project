@@ -5,7 +5,7 @@ from . import views
 
 recipes_urls = [
     path('new/', views.recipe_new, name='recipe_new'),
-    path('<int:id>/', views.recipe_view, name='recipe_view'),
+    path('<int:recipe_id>/', views.recipe_view, name='recipe_view'),
     path('<int:id>/edit/', views.recipe_edit, name='recipe_edit'),
 ]
 

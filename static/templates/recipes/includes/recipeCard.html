@@ -1,7 +1,7 @@
 {% load thumbnail %}
 <div class="card" data-id="{{ recipe.id }}">
   {% thumbnail recipe.image '960x500' crop='center' as im %}
-  <a href="{% url 'recipe_view' recipe.id %}" class="link" target="_blank"><img src="{{ im.url }}" alt="Какой-то текст"
+  <a href="{% url 'recipe_view' recipe.id %}" class="link" target="_blank"><img src="{{ im.url }}" alt="{{ recipe.name }}"
       class="card__image"></a>
   {% endthumbnail %}
   <div class="card__body">
@@ -13,7 +13,7 @@
     </ul>
     <div class="card__items card__items_column">
       <p class="card__text"><span class="icon-time"></span>{{ recipe.cooking_time }} мин.</p>
-      <p class="card__text"><span class="icon-user"></span> <a href="{% url 'profile_view' recipe.author.username %}" style="color: black">{{ recipe.author.get_full_name }}</a></p>
+      <p class="card__text"><span class="icon-user"></span> <a href="{% url 'profile_view' recipe.author.username %}" style="color: black"> {{ recipe.author.get_full_name }}</a></p>
     </div>
   </div>
   <div class="card__footer">

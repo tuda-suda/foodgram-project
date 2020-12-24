@@ -10,17 +10,17 @@
 {% block content %}
   <div class="main__header">
     <h1 class="main__title">Рецепты</h1>
-    {% include '../base/includes/tags.html' %}
+    {% include './includes/filterTags.html' %}
   </div>
 
   <div class="card-list">
     {% for recipe in page %}
-      {% include './recipeCard.html' with recipe=recipe %}
+      {% include './includes/recipeCard.html' with recipe=recipe %}
     {% endfor %}
   </div>
 
   {% if page.has_other_pages %}
-    {% include '../base/includes/paginatior.html' with page=page paginator=paginator %}
+    {% include './includes/paginatior.html' with page=page paginator=paginator %}
   {% endif %}
 {% endblock %}
 
