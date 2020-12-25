@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Recipe
+from .models import Recipe, Tag
 
 
 class RecipeForm(forms.ModelForm):
