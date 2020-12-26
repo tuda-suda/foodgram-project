@@ -33,15 +33,15 @@
       <p class="form__label">Теги</p>
       <div class="form__field-group">
         <div class="tags">
-          {% for tag in tag_list %}
+          {% for tag in form.fields.tags.choices.queryset %}
             <div class="tags__item">
               <input 
                 type="checkbox" 
-                name="tag" 
+                name="tags" 
                 id="id_{{ tag.name }}"
                 class="tags__checkbox tags__checkbox_style_{{ tag.color }}"
-                value="{{ tag.name }}"
-                {% if tag.name in form.tags.value %}checked{% endif %}>
+                value="{{ tag.pk }}"
+                {% if tag.pk in form.tags.value %}checked{% endif %}>
               <label for="id_{{ tag.name }}" class="tags__label">{{ tag.display_name }}</label>
             </div>
           {% endfor %}
