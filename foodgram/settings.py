@@ -133,3 +133,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = 'index'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}

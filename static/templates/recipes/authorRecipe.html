@@ -1,6 +1,7 @@
 {% extends '../base/base.html' %}
 
 {% load static %}
+{% load user_filters %}
 
 {% block title %}Рецепты{% endblock %}
 {% block css %}
@@ -13,11 +14,21 @@
     {% include './includes/filterTags.html' %}
   </div>
 
-  <div class="author-subscribe" data-author="323">
-    <p style="padding: 0 0 2em 0;">
-      <button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button>
-    </p>
-  </div>
+  {% if user.is_authenticated %}
+    <div class="author-subscribe" data-author="{{ author.id }}">
+      <p style="padding: 0 0 2em 0;">
+        {% if request.user|is_subscribed_to:author %}
+          <button class="button button_style_light-blue button_size_subscribe" name="subscribe">
+            Отписаться от автора
+          </button>
+        {% else %}
+          <button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>
+            Подписаться на автора
+          </button>
+        {% endif %}   
+      </p>
+    </div>
+  {% endif %}
 
   <div class="card-list">
     {% for recipe in page %}
