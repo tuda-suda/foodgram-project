@@ -72,8 +72,8 @@
   <script src="{% static 'js/components/Subscribe.js' %}"></script>
 
   {% if user.is_authenticated %}
-    <script src="{% static 'templates/recipes/singlePage.js' %}"></script>
+    <script src="{% static 'templates/recipes/js/singlePage.js' %}"></script>
   {% else %}
-    <script src="{% static 'templates/recipes/singlePageNotAuth.js' %}"></script>
+    <script src="{% static 'templates/recipes/js/singlePageNotAuth.js' %}"></script>
   {% endif %}
 {% endblock %}
