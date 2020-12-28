@@ -12,7 +12,7 @@ recipes_urls = [
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('subscriptions/', lambda x: x, name='subscriptions'),
+    path('subscriptions/', views.subscriptions, name='subscriptions'),
     path('favorites/', lambda x: x, name='favorites'),
     path('shop-list/', lambda x: x, name='shop_list'),
     path('recipe/', include(recipes_urls)),

@@ -4,10 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.urls import reverse
+from django.db.models import Count
 
 from .models import Recipe, Tag
 from .forms import RecipeForm
 from .utils import save_recipe, edit_recipe
+from api.models import Subscription
 
 
 User = get_user_model()
@@ -111,5 +113,27 @@ def profile_view(request, username):
             'author': author,
             'page': page,
             'paginator': paginator
+        }
+    )
+
+
+@login_required
+def subscriptions(request):
+    authors = User.objects.filter(
+        following__user=request.user
+    ).prefetch_related(
+        'recipes'
+    ).annotate(recipe_count=Count('recipes'))
+
+    paginator = Paginator(authors, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
+    return render(
+        request,
+        'recipes/myFollow.html',
+        {
+            'page': page,
+            'paginator': paginator,
         }
     )
