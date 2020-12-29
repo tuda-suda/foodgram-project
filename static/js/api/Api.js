@@ -6,7 +6,7 @@ class Api {
   async getPurchases() {
     const e = await fetch(`${this.apiUrl}/purchases/`, {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       }
     });
     if (e.ok) {
@@ -19,7 +19,8 @@ class Api {
     const e = await fetch(`${this.apiUrl}/purchases/`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.getElementsByName('csrfmiddlewaretoken')[0].value
       },
       body: JSON.stringify({
         id: id
@@ -35,7 +36,8 @@ class Api {
     const e = await fetch(`${this.apiUrl}/purchases/${id}/`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.getElementsByName('csrfmiddlewaretoken')[0].value
       }
     });
     if (e.ok) {

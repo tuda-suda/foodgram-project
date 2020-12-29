@@ -2,13 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.urls import reverse
 from django.db.models import Count
 
 from .models import Recipe, Tag
 from .forms import RecipeForm
-from .utils import save_recipe, edit_recipe
+from .utils import save_recipe, edit_recipe, compile_shop_list
 
 
 User = get_user_model()
@@ -157,7 +157,8 @@ def favorites(request):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
-    return render(request, 
+    return render(
+        request, 
         'recipes/favorite.html',
         {
             'page': page,
@@ -166,3 +167,23 @@ def favorites(request):
             'all_tags': all_tags,
         }
     )
+
+
+@login_required
+def purchases(request):
+    recipes = request.user.shop_list.all()
+    return render(
+        request,
+        'recipes/shopList.html',
+        {'recipes': recipes},
+    )
+
+
+def purchases_download(request):
+    recipes = request.user.shop_list.all()
+    file = compile_shop_list(recipes)
+
+    response = HttpResponse(file, content_type='text/plain')
+    response['Content-Disposition'] = f'attachment; filename=ingredients.txt'
+    return response
+    

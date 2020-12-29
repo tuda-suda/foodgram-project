@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from django.db import transaction, IntegrityError
+from django.db import transaction, IntegrityError, Sum
 from django.http import HttpResponseBadRequest
 
 from .models import Ingredient, RecipeIngredient
@@ -52,3 +52,19 @@ def edit_recipe(request, form, instance):
             return save_recipe(request, form)
     except IntegrityError:
         raise HttpResponseBadRequest
+
+    
+def compile_shop_list(queryset):
+    ingredients = queryset.prefetch_related(
+            'ingredients', 'ingredients_amount'
+        ).order_by(
+            'ingredients__title'
+        ).values(
+            'ingredients__title', 'ingredients__dimension'
+        ).annotate(amount=Sum('ingredients_amount__quantity')
+    )
+    return [
+        (f'\u2022 {item['ingredients__title'].capitalize()} '
+         f'({item['ingredients__dimension']}) \u2014 {item['amount']}\n')
+         for item in ingredients
+    ]

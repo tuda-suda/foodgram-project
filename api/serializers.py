@@ -4,7 +4,7 @@ from rest_framework.exceptions import ValidationError
 
 
 from recipes.models import Ingredient
-from .models import Subscription, Favorite
+from .models import Subscription, Favorite, Purchase
 
 
 class CustomModelSerializer(serializers.ModelSerializer):
@@ -35,3 +35,9 @@ class FavoriteSerializer(CustomModelSerializer):
     class Meta:
         fields = ('recipe', )
         model = Favorite
+
+
+class PurchaseSerializer(CustomModelSerializer):
+    class Meta:
+        fields = ('recipe', )
+        model = Purchase

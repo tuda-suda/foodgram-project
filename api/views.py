@@ -7,12 +7,17 @@ from rest_framework.response import Response
 from recipes.models import Ingredient
 from .models import Subscription, Favorite
 from .serializers import (IngredientSerializer, SubscriptionSerializer,
-                          FavoriteSerializer)
+                          FavoriteSerializer, PurchaseSerializer)
 
 
 class CreateDestroyViewSet(mixins.CreateModelMixin,
                            mixins.DestroyModelMixin,
                            viewsets.GenericViewSet):
+    """
+    A viewset that provides `create` and `destroy` actions.
+
+    `destroy` action is overriden to return a json with `success` indicator.
+    """
    
     def perform_destroy(self, instance):
         return instance.delete()
@@ -42,3 +47,12 @@ class FavoriteViewSet(CreateDestroyViewSet):
     serializer_class = FavoriteSerializer
     permission_classes = (IsAuthenticated, )
     lookup_field = 'recipe'
+
+
+class PurchaseViewSet(mixins.ListModelMixin, CreateDestroyViewSet):
+    serializer_class = PurchaseSerializer
+    permission_classes = (IsAuthenticated, )
+    lookup_field = 'recipe'
+
+    def get_queryset(self):
+        return self.request.user.purchases.all()

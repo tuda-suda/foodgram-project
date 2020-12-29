@@ -7,16 +7,9 @@
   <div class="card-user__body">
     <ul class="card-user__items">
       {% for recipe in author.recipes.all %}
-        {% load thumbnail %}
         {% if forloop.counter < 4 %}
           <li class="card-user__item">
-            <div class="recipe">
-              {% thumbnail recipe.image "72x72" crop="center" as im %}
-                <img src="{{ im.url }}" alt="{{ recipe.name }}" class="recipe__image">
-              {% endthumbnail %}
-              <h3 class="recipe__title">{{ recipe.name }}</h3>
-              <p class="recipe__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>
-            </div>
+            {% include './recipeCardSmall.html' with recipe=recipe %}
           </li>
         {% endif %}
       {% endfor %}

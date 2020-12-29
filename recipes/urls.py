@@ -10,11 +10,16 @@ recipes_urls = [
     path('<int:recipe_id>/delete/', views.recipe_delete, name='recipe_delete'),
 ]
 
+purchases_urls = [
+    path('', views.purchases, name='purchases'),
+    path('download/', views.purchases_download, name='purchases_download'),
+]
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('subscriptions/', views.subscriptions, name='subscriptions'),
     path('favorites/', views.favorites, name='favorites'),
-    path('shop-list/', lambda x: x, name='shop_list'),
+    path('purchases/', include(purchases_urls)),
     path('recipe/', include(recipes_urls)),
     path('<str:username>/', views.profile_view, name='profile_view'),
 ]

@@ -37,3 +37,18 @@ class Subscription(models.Model):
 
     class Meta:
         unique_together = ('user', 'author')
+
+
+class Purchase(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='purchases'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE
+    )
+
+    class Meta:
+        unique_together = ('user', 'recipe')
