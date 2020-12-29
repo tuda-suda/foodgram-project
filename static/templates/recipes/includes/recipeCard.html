@@ -1,3 +1,5 @@
+{% load user_filters %}
+
 {% load thumbnail %}
 <div class="card" data-id="{{ recipe.id }}">
   {% thumbnail recipe.image '960x500' crop='center' as im %}
@@ -21,7 +23,7 @@
       <button class="button button_style_light-blue" name="purchases" data-out>
         <span class="icon-plus button__icon"></span>Добавить в покупки
       </button>
-      <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+      {% include './favoriteButton.html' with recipe=recipe big=False %}
     {% endif %}
   </div>
 </div>
