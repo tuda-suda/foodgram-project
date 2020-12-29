@@ -16,7 +16,7 @@
     <ul class="shopping-list">
       {% for recipe in recipes %}
         <li class="shopping-list__item" data-id="111">
-          {% include './includes/recipeCardSmall.html' with recipe=recipe shop_list=True %}
+          {% include './includes/recipeCardSmall.html' with recipe=recipe.recipe shop_list=True %}
           <a href="#" class="shopping-list__button link">Удалить</a>
         </li>
       {% endfor %}

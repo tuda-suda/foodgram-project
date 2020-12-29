@@ -171,7 +171,7 @@ def favorites(request):
 
 @login_required
 def purchases(request):
-    recipes = request.user.shop_list.all()
+    recipes = request.user.purchases.all()
     return render(
         request,
         'recipes/shopList.html',
@@ -180,7 +180,7 @@ def purchases(request):
 
 
 def purchases_download(request):
-    recipes = request.user.shop_list.all()
+    recipes = request.user.purchases.all()
     file = compile_shop_list(recipes)
 
     response = HttpResponse(file, content_type='text/plain')
