@@ -9,7 +9,6 @@ from django.db.models import Count
 from .models import Recipe, Tag
 from .forms import RecipeForm
 from .utils import save_recipe, edit_recipe
-from api.models import Subscription
 
 
 User = get_user_model()
@@ -19,7 +18,7 @@ def index(request):
     tags = request.GET.getlist('tag', ['breakfast', 'lunch', 'dinner'])
     all_tags = Tag.objects.all()
 
-    recipes = Recipe.objects.all().filter(
+    recipes = Recipe.objects.filter(
         tags__name__in=tags
     ).select_related(
         'author'
@@ -135,5 +134,35 @@ def subscriptions(request):
         {
             'page': page,
             'paginator': paginator,
+        }
+    )
+
+
+@login_required
+def favorites(request):
+    tags = request.GET.getlist('tag', ['breakfast', 'lunch', 'dinner'])
+    all_tags = Tag.objects.all()
+
+    recipes = Recipe.objects.filter(
+        favored_by__user=request.user,
+        tags__name__in=tags
+    ).select_related(
+        'author'
+    ).prefetch_related(
+        'tags'
+    ).distinct()
+    
+
+    paginator = Paginator(recipes, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
+    return render(request, 
+        'recipes/favorite.html',
+        {
+            'page': page,
+            'paginator': paginator,
+            'tags': tags,
+            'all_tags': all_tags,
         }
     )

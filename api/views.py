@@ -5,20 +5,21 @@ from rest_framework.response import Response
 
 
 from recipes.models import Ingredient
-from .models import Subscription
-from .serializers import IngredientSerializer, SubscriptionSerializer
+from .models import Subscription, Favorite
+from .serializers import (IngredientSerializer, SubscriptionSerializer,
+                          FavoriteSerializer)
 
 
 class CreateDestroyViewSet(mixins.CreateModelMixin,
                            mixins.DestroyModelMixin,
                            viewsets.GenericViewSet):
-    
-    def perofrm_destroy(self, instance):
+   
+    def perform_destroy(self, instance):
         return instance.delete()
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        success = self.perofrm_destroy(instance)
+        success = self.perform_destroy(instance)
         return Response({'success': bool(success)}, status=status.HTTP_200_OK)
 
 
@@ -34,3 +35,10 @@ class SubscriptionViewSet(CreateDestroyViewSet):
     serializer_class = SubscriptionSerializer
     permission_classes = (IsAuthenticated, )
     lookup_field = 'author'
+
+
+class FavoriteViewSet(CreateDestroyViewSet):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+    permission_classes = (IsAuthenticated, )
+    lookup_field = 'recipe'

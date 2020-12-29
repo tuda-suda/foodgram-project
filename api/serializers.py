@@ -4,7 +4,13 @@ from rest_framework.exceptions import ValidationError
 
 
 from recipes.models import Ingredient
-from .models import Subscription
+from .models import Subscription, Favorite
+
+
+class CustomModelSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return self.Meta.model.objects.create(**validated_data)
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -13,7 +19,7 @@ class IngredientSerializer(serializers.ModelSerializer):
         model = Ingredient
 
 
-class SubscriptionSerializer(serializers.ModelSerializer):
+class SubscriptionSerializer(CustomModelSerializer):
     class Meta:
         fields = ('author', )
         model = Subscription
@@ -24,6 +30,8 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             raise ValidationError('Нельзя подписаться на самого себя')
         return value
 
-    def create(self, validated_data):
-        validated_data['user'] = self.context['request'].user
-        return Subscription.objects.create(**validated_data)
+
+class FavoriteSerializer(CustomModelSerializer):
+    class Meta:
+        fields = ('recipe', )
+        model = Favorite

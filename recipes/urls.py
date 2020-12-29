@@ -13,7 +13,7 @@ recipes_urls = [
 urlpatterns = [
     path('', views.index, name='index'),
     path('subscriptions/', views.subscriptions, name='subscriptions'),
-    path('favorites/', lambda x: x, name='favorites'),
+    path('favorites/', views.favorites, name='favorites'),
     path('shop-list/', lambda x: x, name='shop_list'),
     path('recipe/', include(recipes_urls)),
     path('<str:username>/', views.profile_view, name='profile_view'),
