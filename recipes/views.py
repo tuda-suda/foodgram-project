@@ -19,7 +19,7 @@ def index(request):
     all_tags = Tag.objects.all()
 
     recipes = Recipe.objects.filter(
-        tags__name__in=tags
+        tags__title__in=tags
     ).select_related(
         'author'
     ).prefetch_related(
@@ -42,10 +42,17 @@ def index(request):
     )
 
 
-def recipe_view(request, recipe_id):
+def recipe_view_redirect(request, recipe_id):
+    recipe = get_object_or_404(Recipe.objects.all(), id=recipe_id)
+
+    return redirect('recipe_view_slug', recipe_id=recipe.id, slug=recipe.slug)
+
+
+def recipe_view_slug(request, recipe_id, slug):
     recipe = get_object_or_404(
         Recipe.objects.select_related('author'),
-        id=recipe_id
+        id=recipe_id,
+        slug=slug
     )
 
     return render(request, 'recipes/singlePage.html', {'recipe': recipe})
@@ -103,7 +110,7 @@ def profile_view(request, username):
     
     author = get_object_or_404(User, username=username)
     author_recipes = author.recipes.filter(
-        tags__name__in=tags
+        tags__title__in=tags
     ).prefetch_related('tags').distinct()
 
     paginator = Paginator(author_recipes, 6)
@@ -152,7 +159,7 @@ def favorites(request):
 
     recipes = Recipe.objects.filter(
         favored_by__user=request.user,
-        tags__name__in=tags
+        tags__title__in=tags
     ).select_related(
         'author'
     ).prefetch_related(

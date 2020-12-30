@@ -4,8 +4,8 @@ from .models import Recipe, Ingredient, Tag
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'author', 'slug')
-    list_filter = ('author', 'name', 'tags')
+    list_display = ('title', 'author', 'slug')
+    list_filter = ('author', 'title', 'tags')
 
 
 class IngredientAdmin(admin.ModelAdmin):
@@ -14,8 +14,8 @@ class IngredientAdmin(admin.ModelAdmin):
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'color', 'display_name')
-    lsit_filter = ('name',)
+    list_display = ('title', 'color', 'display_name')
+    lsit_filter = ('title',)
 
 
 admin.site.register(Recipe, RecipeAdmin)

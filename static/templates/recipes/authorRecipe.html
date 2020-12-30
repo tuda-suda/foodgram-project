@@ -14,10 +14,10 @@
     {% include './includes/filterTags.html' %}
   </div>
 
-  {% if user.is_authenticated %}
+  {% if user.is_authenticated and author != user %}
     <div class="author-subscribe" data-author="{{ author.id }}">
       <p style="padding: 0 0 2em 0;">
-        {% if request.user|is_subscribed_to:author %}
+        {% if user|is_subscribed_to:author %}
           <button class="button button_style_light-blue button_size_subscribe" name="subscribe">
             Отписаться от автора
           </button>

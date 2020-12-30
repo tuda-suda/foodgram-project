@@ -3,7 +3,7 @@
 {% load static %}
 {% load user_filters %}
 
-{% block title %}{{ recipe.name }}{% endblock %}
+{% block title %}{{ recipe.title }}{% endblock %}
 {% block css %}
   <link rel="stylesheet" href="{% static 'pages/single.css' %}">
 {% endblock %}
@@ -12,13 +12,13 @@
 <div class="single-card" data-id="{{ recipe.id }}" data-author="{{ recipe.author.id }}">
   {% load thumbnail %}
   {% thumbnail recipe.image "480x480" as im %}
-    <img src="{{ im.url }}" alt="{{ recipe.name }}" class="single-card__image">
+    <img src="{{ im.url }}" alt="{{ recipe.title }}" class="single-card__image">
   {% endthumbnail %}
 
   <div class="single-card__info">
 
     <div class="single-card__header-info">
-      <h1 class="single-card__title">{{ recipe.name }}</h1>   
+      <h1 class="single-card__title">{{ recipe.title }}</h1>   
       <div class="single-card__favorite">
         {% include './includes/favoriteButton.html' with recipe=recipe big=True %}
       </div>
@@ -40,7 +40,7 @@
 
     <ul class="single-card__items">
       <li class="single-card__item">
-        {% if recipe|is_in_shop_list_of:user %}
+        {% if user.is_authenticated and recipe|is_in_shop_list_of:user %}
           <button class="button button_style_blue" name="purchases">
             <span class="icon-check button__icon"></span> Рецепт добавлен
           </button>

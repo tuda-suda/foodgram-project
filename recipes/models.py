@@ -20,7 +20,7 @@ class Recipe(models.Model):
         on_delete=models.CASCADE,
         related_name='recipes',
     )
-    name = models.CharField(max_length=200)
+    title = models.CharField(max_length=200)
     image = models.ImageField(upload_to='recipes/')
     description = models.TextField()
     ingredients = models.ManyToManyField(
@@ -28,7 +28,7 @@ class Recipe(models.Model):
         through='RecipeIngredient',
     )
     cooking_time = models.PositiveSmallIntegerField()
-    slug = AutoSlugField(populate_from='name', allow_unicode=True)
+    slug = AutoSlugField(populate_from='title', allow_unicode=True)
     tags = models.ManyToManyField('Tag', related_name='recipes')
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
 
@@ -54,6 +54,6 @@ class RecipeIngredient(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50)
+    title = models.CharField(max_length=50)
     display_name = models.CharField(max_length=50)
     color = models.CharField(max_length=50)

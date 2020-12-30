@@ -12,10 +12,10 @@ def parse_tags(get):
 def set_tag_qs(request, tag):
     new_req = request.GET.copy()
     tags = new_req.getlist('tag')
-    if tag.name in tags:
-        tags.remove(tag.name)
+    if tag.title in tags:
+        tags.remove(tag.title)
     else:
-        tags.append(tag.name)
+        tags.append(tag.title)
 
     new_req.setlist('tag', tags)
     return new_req.urlencode()
