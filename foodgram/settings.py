@@ -68,7 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'recipes.context_processors.tag_list',
+                'recipes.context_processors.shop_list_size',
             ],
         },
     },

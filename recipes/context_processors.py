@@ -1,8 +1,8 @@
-from .models import Tag
+from django.db.models import Count
 
 
-def tag_list(request):
-    tags = Tag.objects.all()
+def shop_list_size(request):
+    count = request.user.purchases.all().count
     return {
-        "tag_list": tags
+        "shop_list_size": count
     }

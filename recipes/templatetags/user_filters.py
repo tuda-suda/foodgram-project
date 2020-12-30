@@ -1,7 +1,7 @@
 from django import template, forms
 from django.contrib.auth import get_user_model
 
-from api.models import Subscription, Favorite
+from api.models import Subscription, Favorite, Purchase
 
 
 register = template.Library()
@@ -21,6 +21,11 @@ def is_subscribed_to(user, author):
 @register.filter
 def is_favored_by(recipe, user):
     return Favorite.objects.filter(recipe=recipe, user=user).exists()
+
+
+@register.filter
+def is_in_shop_list_of(recipe, user):
+    return Purchase.objects.filter(recipe=recipe, user=user).exists()
 
 
 @register.filter

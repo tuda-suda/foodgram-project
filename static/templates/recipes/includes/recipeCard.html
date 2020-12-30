@@ -20,9 +20,15 @@
   </div>
   <div class="card__footer">
     {% if user.is_authenticated %}
-      <button class="button button_style_light-blue" name="purchases" data-out>
-        <span class="icon-plus button__icon"></span>Добавить в покупки
-      </button>
+      {% if recipe|is_in_shop_list_of:user %}
+        <button class="button button_style_light-blue-outline" name="purchases">
+          <span class="icon-check button__icon"></span> Рецепт добавлен
+        </button>
+      {% else %}
+        <button class="button button_style_light-blue" name="purchases" data-out>
+          <span class="icon-plus button__icon"></span>Добавить в покупки
+        </button>
+      {% endif %}
       {% include './favoriteButton.html' with recipe=recipe big=False %}
     {% endif %}
   </div>
