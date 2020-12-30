@@ -98,8 +98,13 @@ def recipe_delete(request, recipe_id):
 
 
 def profile_view(request, username):
+    tags = request.GET.getlist('tag', ['breakfast', 'lunch', 'dinner'])
+    all_tags = Tag.objects.all()
+    
     author = get_object_or_404(User, username=username)
-    author_recipes = author.recipes.all()
+    author_recipes = author.recipes.filter(
+        tags__name__in=tags
+    ).prefetch_related('tags').distinct()
 
     paginator = Paginator(author_recipes, 6)
     page_number = request.GET.get('page')
@@ -111,7 +116,9 @@ def profile_view(request, username):
         {
             'author': author,
             'page': page,
-            'paginator': paginator
+            'paginator': paginator,
+            'tags': tags,
+            'all_tags': all_tags,
         }
     )
 
@@ -122,7 +129,7 @@ def subscriptions(request):
         following__user=request.user
     ).prefetch_related(
         'recipes'
-    ).annotate(recipe_count=Count('recipes'))
+    ).annotate(recipe_count=Count('recipes')).order_by('username')
 
     paginator = Paginator(authors, 6)
     page_number = request.GET.get('page')
