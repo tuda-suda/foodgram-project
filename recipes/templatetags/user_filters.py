@@ -38,3 +38,8 @@ def declenize(number, args):
         return f'{number} {args[1]}'
     elif last_digit > 4 or last_digit == 0:
         return f'{number} {args[2]}'
+
+
+@register.filter
+def get_full_name_or_username(user):
+    return user.get_full_name() or user.username
