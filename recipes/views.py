@@ -1,14 +1,16 @@
+import pdfkit
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import Http404, HttpResponse
 from django.urls import reverse
-from django.db.models import Count
+from django.db.models import Count, Sum
 
 from .models import Recipe, Tag
 from .forms import RecipeForm
-from .utils import save_recipe, edit_recipe, compile_shop_list
+from .utils import save_recipe, edit_recipe, generate_pdf
 
 
 User = get_user_model()
@@ -66,17 +68,22 @@ def recipe_new(request):
         print(recipe.tags)
         print(form.cleaned_data['tags'])
 
-        return redirect('recipe_view', recipe_id=recipe.id)
+        return redirect(
+            'recipe_view_slug', recipe_id=recipe.id, slug=recipe.slug
+        )
     
     return render(request, 'recipes/formRecipe.html', {'form': form})
 
 
 @login_required
-def recipe_edit(request, recipe_id):
+def recipe_edit(request, recipe_id, slug):
     recipe = get_object_or_404(Recipe, id=recipe_id)
 
-    if request.user != recipe.author:
-        return redirect('recipe_view', recipe_id=recipe.id)
+    if not request.user.is_superuser:
+        if request.user != recipe.author:
+            return redirect(
+                'recipe_view_slug', recipe_id=recipe.id, slug=recipe.slug
+            )
 
     form = RecipeForm(
         request.POST or None,
@@ -84,10 +91,10 @@ def recipe_edit(request, recipe_id):
         instance=recipe
     )
     if form.is_valid():
-        print(recipe.tags)
-        print(form.cleaned_data['tags'])
         edit_recipe(request, form, instance=recipe)
-        return redirect('recipe_view', recipe_id=recipe.id)
+        return redirect(
+            'recipe_view_slug', recipe_id=recipe.id, slug=recipe.slug
+        )
 
     return render(
         request,
@@ -97,9 +104,9 @@ def recipe_edit(request, recipe_id):
 
 
 @login_required
-def recipe_delete(request, recipe_id):
+def recipe_delete(request, recipe_id, slug):
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    if request.user == recipe.author:
+    if request.user.is_superuser or request.user == recipe.author:
         recipe.delete()
     return redirect('index')
 
@@ -194,10 +201,17 @@ def purchases(request):
 
 
 def purchases_download(request):
-    recipes = request.user.purchases.all()
-    file = compile_shop_list(recipes)
+    ingredients = request.user.purchases.select_related(
+        'recipe'
+    ).order_by(
+        'recipe__ingredients__title'
+    ).values(
+        'recipe__ingredients__title', 'recipe__ingredients__dimension'
+    ).annotate(amount=Sum('recipe__ingredients_amount__quantity')).all()
 
-    response = HttpResponse(file, content_type='text/plain')
-    response['Content-Disposition'] = f'attachment; filename=ingredients.txt'
+    pdf = generate_pdf('misc/shopListPDF.html', {'ingredients': ingredients})
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename=ingredients.pdf'
     return response
     

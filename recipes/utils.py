@@ -1,8 +1,11 @@
+import pdfkit
+
 from decimal import Decimal
 
 from django.db import transaction, IntegrityError
 from django.db.models import Sum
 from django.http import HttpResponseBadRequest
+from django.template.loader import get_template
 
 from .models import Ingredient, RecipeIngredient
 
@@ -63,27 +66,19 @@ def edit_recipe(request, form, instance):
     except IntegrityError:
         raise HttpResponseBadRequest
 
-    
-def compile_shop_list(queryset):
-    """
-    Compile QuerySet of Purchase instances into list of individual ingredients.
 
-    Each ingredient is represented using following format:
-    • <ingredient title> (<dimension>) — <amount>
+def generate_pdf(template_name, context):
     """
-    ingredients = queryset.select_related(
-            'recipe'
-        ).order_by(
-            'recipe__ingredients__title'
-        ).values(
-            'recipe__ingredients__title', 'recipe__ingredients__dimension'
-        ).annotate(amount=Sum('recipe__ingredients_amount__quantity')
-    )
-
-    return [
-        (
-            f"\u2022 {item['recipe__ingredients__title'].capitalize()} "
-            f"({item['recipe__ingredients__dimension']}) "
-            f"\u2014 {item['amount']}\n"
-        ) for item in ingredients
-    ]
+    Generate a PDF file from Django template.
+    """
+    pdf_options = {
+        'page-size': 'Letter',
+        'margin-top': '0.75in',
+        'margin-right': '0.75in',
+        'margin-bottom': '0.75in',
+        'margin-left': '0.75in',
+        'encoding': "UTF-8",
+        'no-outline': None
+    }
+    html = get_template(template_name).render(context)
+    return pdfkit.from_string(html, False, options=pdf_options)

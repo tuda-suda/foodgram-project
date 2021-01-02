@@ -9,6 +9,7 @@ flake8==3.8.4
 iniconfig==1.1.1
 mccabe==0.6.1
 packaging==20.8
+pdfkit==0.6.1
 Pillow==8.0.1
 pluggy==0.13.1
 psycopg2-binary==2.8.6

@@ -17,15 +17,15 @@
     {% csrf_token %}
 
     <div class="form__group">
-      <label for="{{ from.name.id_for_label }}" class="form__label">Название рецепта</label>
+      <label for="{{ from.title.id_for_label }}" class="form__label">Название рецепта</label>
       <div class="form__field-group">
         <input
-          type="{{ form.name.widget_type }}" 
-          id="{{ form.name.id_for_label }}" 
-          name="{{ form.name.html_name }}" 
-          value="{{ form.name.value|default_if_none:'' }}" 
+          type="{{ form.title.widget_type }}" 
+          id="{{ form.title.id_for_label }}" 
+          name="{{ form.title.html_name }}" 
+          value="{{ form.title.value|default_if_none:'' }}" 
           class="form__input" required>
-        <span class="form__error">{{ form.name.errors }}</span>
+        <span class="form__error">{{ form.title.errors }}</span>
       </div>
     </div>
 
@@ -110,7 +110,7 @@
     <div class="form__footer">
       <button class="button button_style_blue">
         {% if recipe %}
-          Сохранить </button> <a style="margin-left: 2.5em" href="{% url 'recipe_delete' recipe.id %}" class="form__ingredient-link">Удалить</a>
+          Сохранить </button> <a style="margin-left: 2.5em" href="{% url 'recipe_delete' recipe.id recipe.slug %}" class="form__ingredient-link">Удалить</a>
         {% else %}
         Создать рецепт
         {% endif %}</button>

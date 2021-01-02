@@ -5,10 +5,10 @@ from . import views
 
 recipes_urls = [
     path('new/', views.recipe_new, name='recipe_new'),
-    path('<int:recipe_id>/', views.recipe_view_redirect, name='recipe_view_redirect'),
+    path('<int:recipe_id>/<slug>/edit/', views.recipe_edit, name='recipe_edit'),
+    path('<int:recipe_id>/<slug>/delete/', views.recipe_delete, name='recipe_delete'),
     path('<int:recipe_id>/<slug>/', views.recipe_view_slug, name='recipe_view_slug'),
-    path('<int:recipe_id>/edit/', views.recipe_edit, name='recipe_edit'),
-    path('<int:recipe_id>/delete/', views.recipe_delete, name='recipe_delete'),
+    path('<int:recipe_id>/', views.recipe_view_redirect, name='recipe_view_redirect'),
 ]
 
 purchases_urls = [

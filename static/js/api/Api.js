@@ -109,7 +109,7 @@ class Api {
   }
   
   async getIngredients(text) {
-    const e = await fetch(`${this.apiUrl}/ingredients?search=${text}/`, {
+    const e = await fetch(`${this.apiUrl}/ingredients/?search=${text}`, {
       headers: {
         'Content-Type': 'application/json'
       }

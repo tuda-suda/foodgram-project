@@ -1,0 +1,38 @@
+<html>
+{% load static %}
+  <head>
+  <meta charset="UTF-8">
+  <title>Shop List</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap');
+    .title {
+      font-family: 'Montserrat', sans-serif;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 52px;
+      line-height: 60px;
+      color: #000000;
+      padding: 0;
+      margin: 0;
+    }
+
+    .ingredients__container {
+      margin-top: 25px;
+      padding: 8px;
+    }
+
+    .ingredients__item {
+      font-size: 24px;
+    }
+  </style>
+  </head>
+<body>
+  <h1 class="title">Список покупок</h1>
+  <ul class="ingredients__cointainer">
+    {% for item in ingredients %}
+      <li class="ingredients__item">
+        {{ item.recipe__ingredients__title|capfirst }} ({{ item.recipe__ingredients__dimension }}) &#8212; {{ item.amount }}
+      </li>
+    {% endfor %}
+    </ul>
+</body>
