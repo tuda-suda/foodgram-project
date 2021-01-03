@@ -10,7 +10,6 @@ from django.template.loader import get_template
 from .models import Ingredient, RecipeIngredient
 
 
-
 def get_ingredients(request):
     """
     Parse POST request body for ingredient names and their respective amounts.
@@ -22,7 +21,7 @@ def get_ingredients(request):
             ingredients[name] = request.POST[
                 f'valueIngredient_{num}'
             ]
-    
+
     return ingredients
 
 

@@ -18,7 +18,7 @@ class CreateDestroyViewSet(mixins.CreateModelMixin,
 
     `destroy` action is overriden to return a json with a `success` flag.
     """
-   
+
     def perform_destroy(self, instance):
         return instance.delete()
 

@@ -49,7 +49,7 @@ class Recipe(models.Model):
     slug = AutoSlugField(populate_from='title', allow_unicode=True)
     tags = models.ManyToManyField('Тег', related_name='recipes')
     pub_date = models.DateTimeField(
-        'Дата публикации', 
+        'Дата публикации',
         auto_now_add=True,
         db_index=True
     )

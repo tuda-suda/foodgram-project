@@ -1,10 +1,11 @@
 import pdfkit
+import io
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import Http404, HttpResponse
+from django.http import Http404, FileResponse
 from django.urls import reverse
 from django.db.models import Count, Sum
 
@@ -17,6 +18,9 @@ User = get_user_model()
 
 
 def index(request):
+    """
+    Display most recent `recipes.Recipe`, fitered with tags, 6 per page.
+    """
     tags = request.GET.getlist('tag', ['breakfast', 'lunch', 'dinner'])
     all_tags = Tag.objects.all()
 
@@ -45,12 +49,18 @@ def index(request):
 
 
 def recipe_view_redirect(request, recipe_id):
+    """
+    Redirect to the `recipe_view_slug` page.
+    """
     recipe = get_object_or_404(Recipe.objects.all(), id=recipe_id)
 
     return redirect('recipe_view_slug', recipe_id=recipe.id, slug=recipe.slug)
 
 
 def recipe_view_slug(request, recipe_id, slug):
+    """
+    Display a single `recipes.Recipe`.
+    """
     recipe = get_object_or_404(
         Recipe.objects.select_related('author'),
         id=recipe_id,
@@ -62,6 +72,14 @@ def recipe_view_slug(request, recipe_id, slug):
 
 @login_required
 def recipe_new(request):
+    """
+    GET: Display a form for a new `recipes.Recipe`.
+
+    POST: Validate and save the form to database.
+    On successful save redirect to `recipe_view_slug` page 
+    of created `recipes.Recipe`.
+    Otherwise stay on page and show validation errors.
+    """
     form = RecipeForm(request.POST or None, files=request.FILES or None)
     if request.method == 'POST' and form.is_valid():
         recipe = save_recipe(request, form)
@@ -71,12 +89,20 @@ def recipe_new(request):
         return redirect(
             'recipe_view_slug', recipe_id=recipe.id, slug=recipe.slug
         )
-    
+
     return render(request, 'recipes/formRecipe.html', {'form': form})
 
 
 @login_required
 def recipe_edit(request, recipe_id, slug):
+    """
+    GET: Display a form for editing of existing `recipes.Recipe`.
+
+    POST: Validate and save the form to database.
+    On successful save redirect to `recipe_view_slug` page 
+    of created `recipes.Recipe`.
+    Otherwise stay on page and show validation errors.
+    """
     recipe = get_object_or_404(Recipe, id=recipe_id)
 
     if not request.user.is_superuser:
@@ -105,6 +131,9 @@ def recipe_edit(request, recipe_id, slug):
 
 @login_required
 def recipe_delete(request, recipe_id, slug):
+    """
+    Delete the given `recipes.Recipe`.
+    """
     recipe = get_object_or_404(Recipe, id=recipe_id)
     if request.user.is_superuser or request.user == recipe.author:
         recipe.delete()
@@ -112,9 +141,13 @@ def recipe_delete(request, recipe_id, slug):
 
 
 def profile_view(request, username):
+    """
+    Display all `recipes.Recipe` of a given `auth.User`, filtered with tags,
+    6 per page.
+    """
     tags = request.GET.getlist('tag', ['breakfast', 'lunch', 'dinner'])
     all_tags = Tag.objects.all()
-    
+
     author = get_object_or_404(User, username=username)
     author_recipes = author.recipes.filter(
         tags__title__in=tags
@@ -139,6 +172,10 @@ def profile_view(request, username):
 
 @login_required
 def subscriptions(request):
+    """
+    Display all `auth.User` the visitor is subscribed to, 
+    each with their 3 most recent `recipes.Recipe`, 6 per page.
+    """
     authors = User.objects.filter(
         following__user=request.user
     ).prefetch_related(
@@ -161,6 +198,10 @@ def subscriptions(request):
 
 @login_required
 def favorites(request):
+    """
+    Display all `recipes.Recipe` that visitor had marked as favorite, 
+    filtered with tags, 6 per page.
+    """
     tags = request.GET.getlist('tag', ['breakfast', 'lunch', 'dinner'])
     all_tags = Tag.objects.all()
 
@@ -172,14 +213,13 @@ def favorites(request):
     ).prefetch_related(
         'tags'
     ).distinct()
-    
 
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
     return render(
-        request, 
+        request,
         'recipes/favorite.html',
         {
             'page': page,
@@ -192,6 +232,9 @@ def favorites(request):
 
 @login_required
 def purchases(request):
+    """
+    Display all `recipes.Recipe` the visitor had put in their shoplist.
+    """
     recipes = request.user.purchases.all()
     return render(
         request,
@@ -200,7 +243,11 @@ def purchases(request):
     )
 
 
+@login_required
 def purchases_download(request):
+    """
+    Download a list of `recipes.Ingredient` from shoplist as a PDF document.
+    """
     ingredients = request.user.purchases.select_related(
         'recipe'
     ).order_by(
@@ -209,9 +256,33 @@ def purchases_download(request):
         'recipe__ingredients__title', 'recipe__ingredients__dimension'
     ).annotate(amount=Sum('recipe__ingredients_amount__quantity')).all()
 
-    pdf = generate_pdf('misc/shopListPDF.html', {'ingredients': ingredients})
+    pdf = generate_pdf(
+        'misc/shopListPDF.html', {'ingredients': ingredients}
+    ).encode('utf-8')
 
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename=ingredients.pdf'
-    return response
-    
+    return FileResponse(
+        io.BytesIO(pdf),
+        filename='ingredients.pdf',
+        as_attachment=True
+    )
+
+
+def page_not_found(request, exception):
+    """
+    Handle HTTP 404 Not Found.
+    """
+    return render(request, 'error/404.html', status=404)
+
+
+def server_error(request):
+    """
+    Handle HTTP 500 Server Error.
+    """
+    return render(request, 'error/500.html', status=500)
+
+
+def page_bad_request(request, exception):
+    """
+    Handle HTTP 400 Bad Request.
+    """
+    return render(request, 'error/400.html', status=400)
