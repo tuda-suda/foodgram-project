@@ -10,7 +10,7 @@ class RecipeForm(forms.ModelForm):
             'title',
             'tags',
             'cooking_time',
-            'description',
+            'text',
             'image',
         )
         widgets = {
