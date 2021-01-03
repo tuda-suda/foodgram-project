@@ -16,7 +16,7 @@ class CreateDestroyViewSet(mixins.CreateModelMixin,
     """
     A viewset that provides `create` and `destroy` actions.
 
-    `destroy` action is overriden to return a json with `success` indicator.
+    `destroy` action is overriden to return a json with a `success` flag.
     """
    
     def perform_destroy(self, instance):
@@ -29,6 +29,9 @@ class CreateDestroyViewSet(mixins.CreateModelMixin,
 
 
 class IngredientViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    Provide a search for ingredients in database.
+    """
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     filter_backends = (filters.SearchFilter, )
@@ -36,6 +39,10 @@ class IngredientViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 
 class SubscriptionViewSet(CreateDestroyViewSet):
+    """
+    A viewset that provides creation and deletion of 
+    `api.Subscription` entries.
+    """
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
     permission_classes = (IsAuthenticated, )
@@ -43,6 +50,10 @@ class SubscriptionViewSet(CreateDestroyViewSet):
 
 
 class FavoriteViewSet(CreateDestroyViewSet):
+    """
+    A viewset that provides creation and deletion of 
+    `api.Favorite` entries.
+    """
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
     permission_classes = (IsAuthenticated, )
@@ -50,6 +61,10 @@ class FavoriteViewSet(CreateDestroyViewSet):
 
 
 class PurchaseViewSet(mixins.ListModelMixin, CreateDestroyViewSet):
+    """
+    A viewset that provides creation, deletion and listing of 
+    `api.Purchase` entries for a given `auth.User`.
+    """
     serializer_class = PurchaseSerializer
     permission_classes = (IsAuthenticated, )
     lookup_field = 'recipe'
