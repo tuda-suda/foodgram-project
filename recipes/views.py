@@ -1,12 +1,10 @@
-import pdfkit
 import io
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import Http404, FileResponse
-from django.urls import reverse
+from django.http import FileResponse
 from django.db.models import Count, Sum
 
 from .models import Recipe, Tag
@@ -76,7 +74,7 @@ def recipe_new(request):
     GET: Display a form for a new `recipes.Recipe`.
 
     POST: Validate and save the form to database.
-    On successful save redirect to `recipe_view_slug` page 
+    On successful save redirect to `recipe_view_slug` page
     of created `recipes.Recipe`.
     Otherwise stay on page and show validation errors.
     """
@@ -99,7 +97,7 @@ def recipe_edit(request, recipe_id, slug):
     GET: Display a form for editing of existing `recipes.Recipe`.
 
     POST: Validate and save the form to database.
-    On successful save redirect to `recipe_view_slug` page 
+    On successful save redirect to `recipe_view_slug` page
     of created `recipes.Recipe`.
     Otherwise stay on page and show validation errors.
     """
@@ -173,7 +171,7 @@ def profile_view(request, username):
 @login_required
 def subscriptions(request):
     """
-    Display all `auth.User` the visitor is subscribed to, 
+    Display all `auth.User` the visitor is subscribed to,
     each with their 3 most recent `recipes.Recipe`, 6 per page.
     """
     authors = User.objects.filter(
@@ -199,7 +197,7 @@ def subscriptions(request):
 @login_required
 def favorites(request):
     """
-    Display all `recipes.Recipe` that visitor had marked as favorite, 
+    Display all `recipes.Recipe` that visitor had marked as favorite,
     filtered with tags, 6 per page.
     """
     tags = request.GET.getlist('tag', ['breakfast', 'lunch', 'dinner'])

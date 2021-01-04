@@ -1,10 +1,7 @@
-from django.db.models import Count
-
-
 def shop_list_size(request):
     if not request.user.is_anonymous:
         count = request.user.purchases.all().count
-    else: 
+    else:
         count = 0
     return {
         "shop_list_size": count

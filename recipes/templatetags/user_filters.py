@@ -1,4 +1,4 @@
-from django import template, forms
+from django import template
 from django.contrib.auth import get_user_model
 
 from api.models import Subscription, Favorite, Purchase

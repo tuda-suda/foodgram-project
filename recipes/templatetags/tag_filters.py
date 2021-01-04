@@ -19,4 +19,3 @@ def set_tag_qs(request, tag):
 
     new_req.setlist('tag', tags)
     return new_req.urlencode()
-    

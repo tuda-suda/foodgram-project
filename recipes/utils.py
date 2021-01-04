@@ -3,7 +3,6 @@ import pdfkit
 from decimal import Decimal
 
 from django.db import transaction, IntegrityError
-from django.db.models import Sum
 from django.http import HttpResponseBadRequest
 from django.template.loader import get_template
 

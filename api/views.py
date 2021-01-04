@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import filters, mixins, viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -40,7 +39,7 @@ class IngredientViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 class SubscriptionViewSet(CreateDestroyViewSet):
     """
-    A viewset that provides creation and deletion of 
+    A viewset that provides creation and deletion of
     `api.Subscription` entries.
     """
     queryset = Subscription.objects.all()
@@ -51,7 +50,7 @@ class SubscriptionViewSet(CreateDestroyViewSet):
 
 class FavoriteViewSet(CreateDestroyViewSet):
     """
-    A viewset that provides creation and deletion of 
+    A viewset that provides creation and deletion of
     `api.Favorite` entries.
     """
     queryset = Favorite.objects.all()
@@ -62,7 +61,7 @@ class FavoriteViewSet(CreateDestroyViewSet):
 
 class PurchaseViewSet(mixins.ListModelMixin, CreateDestroyViewSet):
     """
-    A viewset that provides creation, deletion and listing of 
+    A viewset that provides creation, deletion and listing of
     `api.Purchase` entries for a given `auth.User`.
     """
     serializer_class = PurchaseSerializer

@@ -2,7 +2,6 @@ from autoslug import AutoSlugField
 
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinValueValidator
 
 
@@ -63,7 +62,7 @@ class Recipe(models.Model):
 class RecipeIngredient(models.Model):
     """
     Intermediate model that supports a Many-to-Many relationship between
-    `recipes.Recipe` and `recipes.Ingredient`. 
+    `recipes.Recipe` and `recipes.Ingredient`.
     Also stores an additional `quantity` field.
     """
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)

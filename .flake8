@@ -1,0 +1,2 @@
+[flake8]
+exclude = .git, venv, static, media, db.slite3, migrations, __pycache__, settings.py
