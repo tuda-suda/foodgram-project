@@ -256,7 +256,7 @@ def purchases_download(request):
 
     pdf = generate_pdf(
         'misc/shopListPDF.html', {'ingredients': ingredients}
-    ).encode('utf-8')
+    )
 
     return FileResponse(
         io.BytesIO(pdf),

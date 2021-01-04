@@ -11,24 +11,17 @@ class RecipeIngredientInline(admin.TabularInline):
     verbose_name = 'ингредиент'
 
 
-class TagInline(admin.TabularInline):
-    model = Tag
-    min_num = 1
-    extra = 0
-    verbose_name = 'тег'
-
-
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    inlines = (RecipeIngredientInline, Tag)
+    inlines = (RecipeIngredientInline, )
     list_display = (
         'id', 'title', 'author', 'slug',
-        'duration', 'tags', 'get_favorite_count'
+        'cooking_time', 'get_favorite_count'
     )
     list_filter = ('author', 'tags__title')
     search_fields = ('title', 'author__username')
-    autocomplete_fields = ('author')
-    ordering = ('-pub_date')
+    autocomplete_fields = ('author', )
+    ordering = ('-pub_date', )
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -41,10 +34,10 @@ class RecipeAdmin(admin.ModelAdmin):
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('title', 'dimension')
-    list_filter = ('title', )
+    search_fields = ('^title', )
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ('title', 'color', 'display_name')
-    list_filter = ('title',)
+    list_filter = ('title', )

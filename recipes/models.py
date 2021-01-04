@@ -19,6 +19,9 @@ class Ingredient(models.Model):
     )
     dimension = models.CharField('Единица измерения', max_length=10)
 
+    def __str__(self):
+        return f'{self.title}, {self.dimension}'
+
     class Meta:
         ordering = ('title', )
         verbose_name = 'ингредиент'
@@ -46,12 +49,19 @@ class Recipe(models.Model):
     )
     cooking_time = models.PositiveSmallIntegerField('Время приготовления')
     slug = AutoSlugField(populate_from='title', allow_unicode=True)
-    tags = models.ManyToManyField('Тег', related_name='recipes')
+    tags = models.ManyToManyField(
+        'Tag',
+        related_name='recipes',
+        verbose_name='Теги'
+    )
     pub_date = models.DateTimeField(
         'Дата публикации',
         auto_now_add=True,
         db_index=True
     )
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         ordering = ('-pub_date', )
@@ -89,6 +99,9 @@ class Tag(models.Model):
     display_name = models.CharField('Имя тега для шаблона', max_length=50)
     color = models.CharField('Цвет тега', max_length=50)
 
+    def __str__(self):
+            return self.title
+            
     class Meta:
         verbose_name = 'тег'
         verbose_name_plural = 'теги'
