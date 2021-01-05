@@ -36,7 +36,7 @@ def index(request):
 
     return render(
         request,
-        'recipes/indexAuth.html',
+        'recipes/index.html',
         {
             'page': page,
             'paginator': paginator,
