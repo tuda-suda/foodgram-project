@@ -9,11 +9,11 @@ handler400 = 'recipes.views.page_bad_request'
 handler404 = 'recipes.views.page_not_found'
 handler500 = 'recipes.views.server_error'
 
+
 urlpatterns = [
     path('auth/', include('users.urls')),
     path('admin/', admin.site.urls),
-    path('about-author/', lambda x: x, name='about_author'),
-    path('tech-stack/', lambda x: x, name='tech_stack'),
+    path('about/', include('django.contrib.flatpages.urls')),
     path('api/', include('api.urls')),
     path('', include('recipes.urls')),
 ]
