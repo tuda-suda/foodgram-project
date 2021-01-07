@@ -16,6 +16,7 @@ services:
 
   web:
     container_name: foodgram
+    build: .
     image: 'mugtaram/foodgram:latest'
     restart: always
     command: gunicorn foodgram.wsgi:application --bind 0.0.0.0:8000 --access-logfile -
