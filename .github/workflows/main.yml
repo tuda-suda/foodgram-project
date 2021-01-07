@@ -56,6 +56,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
         port: 22
         source: 'docker-compose.yaml, config/nginx/default.conf'
         target: '/usr/src/app'
