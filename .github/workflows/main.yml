@@ -69,11 +69,9 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          cd app
-          sudo docker rmi mugtaram/foodgram -f
-          sudo docker pull mugtaram/foodgram:latest
-          sudo docker-compose up --force-recreate --no-deps -d web
-          sudo docker image prune -f
+          sudo docker pull mugtaram/foodgram
+          sudo docker stop $(sudo docker ps -a -q)
+          sudo docker run --rm -d -p 8000:8000 mugtaram/foodgram
           
   send_message:
     name: Send workflow status message
