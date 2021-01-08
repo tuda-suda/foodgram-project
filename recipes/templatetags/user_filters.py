@@ -43,3 +43,9 @@ def declenize(number, args):
 @register.filter
 def get_full_name_or_username(user):
     return user.get_full_name() or user.username
+
+
+@register.filter
+def tags_to_url_params(tags):
+    url_param_tags = [f'tag={tag}' for tag in tags]
+    return '&' + '&'.join(url_param_tags)
