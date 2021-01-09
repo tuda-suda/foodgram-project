@@ -19,13 +19,13 @@ class Ingredient(models.Model):
     )
     dimension = models.CharField('Единица измерения', max_length=10)
 
-    def __str__(self):
-        return f'{self.title}, {self.dimension}'
-
     class Meta:
         ordering = ('title', )
         verbose_name = 'ингредиент'
         verbose_name_plural = 'ингредиенты'
+
+    def __str__(self):
+        return f'{self.title}, {self.dimension}'
 
 
 class Recipe(models.Model):
@@ -60,13 +60,13 @@ class Recipe(models.Model):
         db_index=True
     )
 
-    def __str__(self):
-        return self.title
-
     class Meta:
         ordering = ('-pub_date', )
         verbose_name = 'рецепт'
         verbose_name_plural = 'рецепты'
+
+    def __str__(self):
+        return self.title
 
 
 class RecipeIngredient(models.Model):
@@ -79,7 +79,7 @@ class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='ingredients_amount'
+        related_name='ingredients_amounts'
     )
     quantity = models.DecimalField(
         max_digits=6,
@@ -105,3 +105,6 @@ class Tag(models.Model):
     class Meta:
         verbose_name = 'тег'
         verbose_name_plural = 'теги'
+
+    def __str__(self):
+            return self.title

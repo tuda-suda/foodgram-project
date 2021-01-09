@@ -1,6 +1,7 @@
 import io
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -13,13 +14,14 @@ from .utils import save_recipe, edit_recipe, generate_pdf
 
 
 User = get_user_model()
+TAGS = ['breakfast', 'lunch', 'dinner']
 
 
 def index(request):
     """
     Display most recent `recipes.Recipe`, fitered with tags, 6 per page.
     """
-    tags = request.GET.getlist('tag', ['breakfast', 'lunch', 'dinner'])
+    tags = request.GET.getlist('tag', TAGS)
     all_tags = Tag.objects.all()
 
     recipes = Recipe.objects.filter(
@@ -30,7 +32,7 @@ def index(request):
         'tags'
     ).distinct()
 
-    paginator = Paginator(recipes, 6)
+    paginator = Paginator(recipes, settings.PAGINATION_PAGE_SIZE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
@@ -79,10 +81,8 @@ def recipe_new(request):
     Otherwise stay on page and show validation errors.
     """
     form = RecipeForm(request.POST or None, files=request.FILES or None)
-    if request.method == 'POST' and form.is_valid():
+    if form.is_valid():
         recipe = save_recipe(request, form)
-        print(recipe.tags)
-        print(form.cleaned_data['tags'])
 
         return redirect(
             'recipe_view_slug', recipe_id=recipe.id, slug=recipe.slug
@@ -143,7 +143,7 @@ def profile_view(request, username):
     Display all `recipes.Recipe` of a given `auth.User`, filtered with tags,
     6 per page.
     """
-    tags = request.GET.getlist('tag', ['breakfast', 'lunch', 'dinner'])
+    tags = request.GET.getlist('tag', TAGS)
     all_tags = Tag.objects.all()
 
     author = get_object_or_404(User, username=username)
@@ -151,7 +151,7 @@ def profile_view(request, username):
         tags__title__in=tags
     ).prefetch_related('tags').distinct()
 
-    paginator = Paginator(author_recipes, 6)
+    paginator = Paginator(author_recipes, settings.PAGINATION_PAGE_SIZE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
@@ -180,7 +180,7 @@ def subscriptions(request):
         'recipes'
     ).annotate(recipe_count=Count('recipes')).order_by('username')
 
-    paginator = Paginator(authors, 6)
+    paginator = Paginator(authors, settings.PAGINATION_PAGE_SIZE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
@@ -200,7 +200,7 @@ def favorites(request):
     Display all `recipes.Recipe` that visitor had marked as favorite,
     filtered with tags, 6 per page.
     """
-    tags = request.GET.getlist('tag', ['breakfast', 'lunch', 'dinner'])
+    tags = request.GET.getlist('tag', TAGS)
     all_tags = Tag.objects.all()
 
     recipes = Recipe.objects.filter(
@@ -212,7 +212,7 @@ def favorites(request):
         'tags'
     ).distinct()
 
-    paginator = Paginator(recipes, 6)
+    paginator = Paginator(recipes, settings.PAGINATION_PAGE_SIZE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
@@ -252,7 +252,7 @@ def purchases_download(request):
         'recipe__ingredients__title'
     ).values(
         'recipe__ingredients__title', 'recipe__ingredients__dimension'
-    ).annotate(amount=Sum('recipe__ingredients_amount__quantity')).all()
+    ).annotate(amount=Sum('recipe__ingredients_amounts__quantity')).all()
 
     pdf = generate_pdf(
         'misc/shopListPDF.html', {'ingredients': ingredients}
@@ -263,24 +263,3 @@ def purchases_download(request):
         filename='ingredients.pdf',
         as_attachment=True
     )
-
-
-def page_not_found(request, exception):
-    """
-    Handle HTTP 404 Not Found.
-    """
-    return render(request, 'error/404.html', status=404)
-
-
-def server_error(request):
-    """
-    Handle HTTP 500 Server Error.
-    """
-    return render(request, 'error/500.html', status=500)
-
-
-def page_bad_request(request, exception):
-    """
-    Handle HTTP 400 Bad Request.
-    """
-    return render(request, 'error/400.html', status=400)
