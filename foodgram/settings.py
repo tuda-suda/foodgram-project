@@ -9,9 +9,11 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import os
 
 from pathlib import Path
 
+ENV = os.environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '0^sg2+80@xf4hfbch1s5+_h15q!fmye6r*lz_66qb*+=i!==c0'
+SECRET_KEY = ENV.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+ALLOWED_HOSTS = ['84.201.159.80', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
@@ -84,8 +88,12 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': ENV.get('DB_ENGINE'),
+        'NAME': ENV.get('DB_NAME'),
+        'USER': ENV.get('POSTGRES_USER'),
+        'PASSWORD': ENV.get('POSTGRES_PASSWORD'),
+        'HOST': ENV.get('DB_HOST'),
+        'PORT': ENV.get('DB_PORT'),
     }
 }
 
