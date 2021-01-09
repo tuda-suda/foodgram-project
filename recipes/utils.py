@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from django.db import transaction, IntegrityError
 from django.http import HttpResponseBadRequest
+from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
 
 from .models import Ingredient, RecipeIngredient
@@ -37,7 +38,7 @@ def save_recipe(request, form):
             objs = []
             ingredients = get_ingredients(request)
             for name, quantity in ingredients.items():
-                ingredient = Ingredient.objects.get(title=name)
+                ingredient = get_object_or_404(Ingredient, title=name)
                 objs.append(
                     RecipeIngredient(
                         recipe=recipe,

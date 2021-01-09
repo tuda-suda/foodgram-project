@@ -25,7 +25,7 @@ SECRET_KEY = '0^sg2+80@xf4hfbch1s5+_h15q!fmye6r*lz_66qb*+=i!==c0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -70,7 +70,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'recipes.context_processors.shop_list_size',
             ],
         },
     },
@@ -128,7 +127,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (BASE_DIR / 'static', )
+_STATIC_ROOT = BASE_DIR / 'static'
+if DEBUG:
+    STATICFILES_DIRS = (_STATIC_ROOT, )
+else:
+    STATIC_ROOT = _STATIC_ROOT
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -146,3 +149,5 @@ REST_FRAMEWORK = {
 }
 
 SITE_ID = 2
+
+PAGINATION_PAGE_SIZE = 6

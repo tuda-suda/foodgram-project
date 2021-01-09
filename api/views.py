@@ -17,13 +17,9 @@ class CreateDestroyViewSet(mixins.CreateModelMixin,
 
     `destroy` action is overriden to return a json with a `success` flag.
     """
-
-    def perform_destroy(self, instance):
-        return instance.delete()
-
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        success = self.perform_destroy(instance)
+        success = instance.delete()
         return Response({'success': bool(success)}, status=status.HTTP_200_OK)
 
 
