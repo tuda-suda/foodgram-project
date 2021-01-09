@@ -99,12 +99,9 @@ class Tag(models.Model):
     display_name = models.CharField('Имя тега для шаблона', max_length=50)
     color = models.CharField('Цвет тега', max_length=50)
 
-    def __str__(self):
-        return self.title
-
     class Meta:
         verbose_name = 'тег'
         verbose_name_plural = 'теги'
 
     def __str__(self):
-        return self.title
+            return self.title
