@@ -26,7 +26,7 @@ class CreateDestroyViewSet(mixins.CreateModelMixin,
             self.lookup_field: self.kwargs[lookup_url_kwarg],
             **kwargs,
         }
-        
+
         obj = get_object_or_404(queryset, **filter_kwargs)
         self.check_object_permissions(self.request, obj)
 
