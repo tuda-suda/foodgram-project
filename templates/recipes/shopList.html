@@ -15,7 +15,7 @@
   <div class="card-list card-list_column">
     <ul class="shopping-list">
       {% for recipe in recipes %}
-        <li class="shopping-list__item" data-id="111">
+        <li class="shopping-list__item" data-id="{{ recipe.recipe.id }}">
           {% include './includes/recipeCardSmall.html' with recipe=recipe.recipe shop_list=True %}
           <a href="#" class="shopping-list__button link">Удалить</a>
         </li>
