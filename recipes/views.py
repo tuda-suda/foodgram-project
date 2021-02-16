@@ -19,7 +19,7 @@ TAGS = ['breakfast', 'lunch', 'dinner']
 
 def index(request):
     """
-    Display most recent `recipes.Recipe`, fitered with tags, 6 per page.
+    Display most recent `recipes.Recipe`, fitered with tags.
     """
     tags = request.GET.getlist('tag', TAGS)
     all_tags = Tag.objects.all()
@@ -140,8 +140,7 @@ def recipe_delete(request, recipe_id, slug):
 
 def profile_view(request, username):
     """
-    Display all `recipes.Recipe` of a given `auth.User`, filtered with tags,
-    6 per page.
+    Display all `recipes.Recipe` of a given `auth.User`, filtered with tags.
     """
     tags = request.GET.getlist('tag', TAGS)
     all_tags = Tag.objects.all()
@@ -172,7 +171,7 @@ def profile_view(request, username):
 def subscriptions(request):
     """
     Display all `auth.User` the visitor is subscribed to,
-    each with their 3 most recent `recipes.Recipe`, 6 per page.
+    each with their most recent `recipes.Recipe`.
     """
     authors = User.objects.filter(
         following__user=request.user
@@ -198,7 +197,7 @@ def subscriptions(request):
 def favorites(request):
     """
     Display all `recipes.Recipe` that visitor had marked as favorite,
-    filtered with tags, 6 per page.
+    filtered with tags.
     """
     tags = request.GET.getlist('tag', TAGS)
     all_tags = Tag.objects.all()
