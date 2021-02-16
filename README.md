@@ -17,6 +17,7 @@ The site is available on http://84.201.159.80
 - PostgreSQL
 - Gunicorn + Nginx
 - CI/CD: Docker, docker-compose, GitHub Actions
+- Yandex.Cloud
 
 ## Setup
 - Clone the github repository
